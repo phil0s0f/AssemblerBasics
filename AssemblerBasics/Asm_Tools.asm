@@ -15,18 +15,11 @@ Make_Sum proc
 
 Make_Sum endp
 ;-----------------------------------------------------------------------------------------------------------------
-Draw_Line_Horizontal proc
-;extern "C" void Draw_Line_Horizontal(CHAR_INFO *screen_buffer, SPos pos, CHAR_INFO symbol)
+Get_Pos_Address proc
 ;параметры:
 ;RCX - screen_buffer
 ;RDX - pos
-;R8 - symbol
-;return RAX
-
-	push rax
-	push rbx
-	push rcx
-	push rdi
+;return RDI
 
 	;1. Вычисляем адрес вывода: addres_offset =  (pos.Y * pos.Screen_Width + pos.X) * 4
 	;1.1.pos.Y * pos.Screen_Width
@@ -53,6 +46,25 @@ Draw_Line_Horizontal proc
 	mov rdi, rcx ; RDI = screen_buffer
 	add rdi, rax ; RDI = screen_buffer + addres_offset
 
+	ret
+
+Get_Pos_Address endp
+;-----------------------------------------------------------------------------------------------------------------
+Draw_Line_Horizontal proc
+;extern "C" void Draw_Line_Horizontal(CHAR_INFO *screen_buffer, SPos pos, CHAR_INFO symbol)
+;параметры:
+;RCX - screen_buffer
+;RDX - pos
+;R8 - symbol
+;return нет
+
+	push rax
+	push rbx
+	push rcx
+	push rdi
+
+	;1. Вычисляем адрес вывода
+	call Get_Pos_Address ; RDI = позиция символа в буфере screen_buffer в позиции pos
 
 	;2. Выводим символы
 	mov eax, r8d
@@ -71,4 +83,65 @@ Draw_Line_Horizontal proc
 
 Draw_Line_Horizontal endp
 ;-----------------------------------------------------------------------------------------------------------------
+Show_Colors proc
+;extern "C" void Show_Colors(CHAR_INFO * screen_buffer, SPos pos, CHAR_INFO symbol)
+;параметры:
+;RCX - screen_buffer
+;RDX - pos
+;R8 - symbol
+;return нет
+
+	push rax
+	push rbx
+	push rcx
+	push rdi
+	push r10
+	push r11
+
+
+	;1. Вычисляем адрес вывода
+	call Get_Pos_Address ; RDI = позиция символа в буфере screen_buffer в позиции pos
+
+	mov r10, rdi
+
+	;2. Вычисление коррекции позиции вывода
+	mov r11, rdx
+	shr r11, 32 ; R11 = pos
+	movzx r11, r11w ; R11 = R11W = pos.Screen_width
+	shl r11, 2 ; R11 = pos.Screen_width * 4 = Ширина экрана в байтах
+
+	;3. Готовим цикл
+	mov rax, r8 ; RAX = EAX = symbol
+
+	and rax, 0ffffh ;Обнуляем все байты RAX, кроме 0 и 1
+	mov rbx, 16
+	xor rcx, rcx ; RCX = 0
+
+	_0:
+		mov cl, 16
+
+		_1:
+			stosd ; Запись двойного слова в строку
+			add rax, 010000h ; Единица, смещенная на 16 разрядов влево
+
+		loop _1
+
+		add r10, r11 ; переход
+		mov rdi, r10 ; на новую строку
+
+		dec rbx
+	jnz _0
+
+	pop r11
+	pop r10
+	pop rdi
+	pop rcx
+	pop rbx
+	pop rax
+
+	ret
+
+Show_Colors endp
+;-----------------------------------------------------------------------------------------------------------------
+
 end

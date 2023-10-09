@@ -15,7 +15,8 @@ struct SPos
 };
 
 extern "C" int Make_Sum(int one_value, int another_value);
-extern "C" void Draw_Line_Horizontal(CHAR_INFO *screen_buffer, SPos pos, CHAR_INFO symbol);
+extern "C" void Draw_Line_Horizontal(CHAR_INFO * screen_buffer, SPos pos, CHAR_INFO symbol);
+extern "C" void Show_Colors(CHAR_INFO * screen_buffer, SPos pos, CHAR_INFO symbol);
 
 int main(void)
 {
@@ -74,10 +75,11 @@ int main(void)
 
 	CHAR_INFO symbol{};
 	symbol.Char.UnicodeChar = L'-';
-	symbol.Attributes = 0x50;
+	symbol.Attributes = 0x1b;
 	SPos pos(2, 1, screen_buffer_info.dwSize.X, 10);
 
 	Draw_Line_Horizontal(screen_buffer, pos, symbol);
+	//Show_Colors(screen_buffer, pos, symbol);
 
 	if (!WriteConsoleOutput(
 		screen_buffer_handle, // screen buffer to write to
@@ -90,7 +92,7 @@ int main(void)
 		return 1;
 	}
 
-	Sleep(5000);
+	Sleep(150 *1000); // 150 секунд программа будет "спать"
 
 	// Restore the original active screen buffer.
 	if (!SetConsoleActiveScreenBuffer(std_handle))

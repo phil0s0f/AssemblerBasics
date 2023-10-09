@@ -3,17 +3,19 @@
 
 struct SPos
 {
-	SPos(short x_pos,	short y_pos)
-		: X_Pos(x_pos), Y_Pos(y_pos)
+	SPos(unsigned short x_pos, unsigned short y_pos, unsigned short screen_width, unsigned short len)
+		: X_Pos(x_pos), Y_Pos(y_pos), Screen_Width(screen_width), Len(len)
 	{
 	}
 
-	short X_Pos;
-	short Y_Pos;
+	unsigned short X_Pos;
+	unsigned short Y_Pos;
+	unsigned short Screen_Width;
+	unsigned short Len;
 };
 
 extern "C" int Make_Sum(int one_value, int another_value);
-extern "C" void Draw_Line(CHAR_INFO *screen_buffer, SPos pos, int len, CHAR_INFO symbol);
+extern "C" void Draw_Line_Horizontal(CHAR_INFO *screen_buffer, SPos pos, CHAR_INFO symbol);
 
 int main(void)
 {
@@ -73,9 +75,9 @@ int main(void)
 	CHAR_INFO symbol{};
 	symbol.Char.UnicodeChar = L'-';
 	symbol.Attributes = 0x50;
-	SPos pos(2, 1);
+	SPos pos(2, 1, screen_buffer_info.dwSize.X, 10);
 
-	Draw_Line(screen_buffer, pos, 10, symbol);
+	Draw_Line_Horizontal(screen_buffer, pos, symbol);
 
 	if (!WriteConsoleOutput(
 		screen_buffer_handle, // screen buffer to write to

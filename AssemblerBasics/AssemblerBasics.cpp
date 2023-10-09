@@ -1,7 +1,19 @@
-﻿extern "C" int Make_Sum(int one_value, int another_value);
-
-#include <windows.h>
+﻿#include <windows.h>
 #include <stdio.h>
+
+struct SPos
+{
+	SPos(short x_pos,	short y_pos)
+		: X_Pos(x_pos), Y_Pos(y_pos)
+	{
+	}
+
+	short X_Pos;
+	short Y_Pos;
+};
+
+extern "C" int Make_Sum(int one_value, int another_value);
+extern "C" void Draw_Line(CHAR_INFO *screen_buffer, SPos pos, int len, CHAR_INFO symbol);
 
 int main(void)
 {
@@ -32,7 +44,6 @@ int main(void)
 	}
 
 	// Make the new screen buffer the active screen buffer.
-
 	if (!SetConsoleActiveScreenBuffer(screen_buffer_handle))
 	{
 		printf("SetConsoleActiveScreenBuffer failed - (%d)\n", GetLastError());
@@ -44,21 +55,26 @@ int main(void)
 		printf("GetConsoleScreenBufferInfo failed - (%d)\n", GetLastError());
 		return 1;
 	}
+
 	screen_buffer_size = (int)screen_buffer_info.dwSize.X * (int)screen_buffer_info.dwSize.Y;
 	screen_buffer = new CHAR_INFO[screen_buffer_size];
-
 	memset(screen_buffer, 0, screen_buffer_size * sizeof(CHAR_INFO));
-	// Set the destination rectangle.
 
+	// Set the destination rectangle.
 	srctWriteRect.Top = 10;    // top lt: row 10, col 0
 	srctWriteRect.Left = 0;
 	srctWriteRect.Bottom = 11; // bot. rt: row 11, col 79
 	srctWriteRect.Right = 79;
 
-	// Copy from the temporary buffer to the new screen buffer.
+	//screen_buffer[0].Char.UnicodeChar = L'W';
+	//screen_buffer[0].Attributes = 0x50;
 
-	screen_buffer[0].Char.UnicodeChar = L'W';
-	screen_buffer[0].Attributes = 0x50;
+	CHAR_INFO symbol{};
+	symbol.Char.UnicodeChar = L'-';
+	symbol.Attributes = 0x50;
+	SPos pos(2, 1);
+
+	Draw_Line(screen_buffer, pos, 10, symbol);
 
 	if (!WriteConsoleOutput(
 		screen_buffer_handle, // screen buffer to write to

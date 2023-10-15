@@ -59,8 +59,8 @@ int main(void)
 
 
 	int half_width = screen_buffer_info.dwSize.X / 2;
-	APanel left_panel(0, 0, half_width, screen_buffer_info.dwSize.Y - 2);
-	//APanel right_panel(half_width, 0, half_width, screen_buffer_info.dwSize.Y - 2);
+	APanel left_panel(0, 0, half_width, screen_buffer_info.dwSize.Y - 2, screen_buffer, screen_buffer_info.dwSize.X);
+	//APanel right_panel(half_width, 0, half_width, screen_buffer_info.dwSize.Y - 2, screen_buffer);
 
 	left_panel.Draw();
 	//right_panel.Draw();

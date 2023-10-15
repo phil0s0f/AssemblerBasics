@@ -14,6 +14,16 @@ struct SPos
 	unsigned short Len;
 };
 
+class ASymbol
+{
+public:
+	ASymbol(unsigned short main_symbol, unsigned short attribute, wchar_t start_symbol, wchar_t end_symbol);
+	unsigned short Main_Symbol;
+	unsigned short Attribute;
+	wchar_t Start_Symbol;
+	wchar_t End_Symbol;
+};
+
 class APanel
 {
 public:
@@ -29,7 +39,7 @@ public:
 };
 
 extern "C" int Make_Sum(int one_value, int another_value);
-extern "C" void Draw_Line_Horizontal(CHAR_INFO * screen_buffer, SPos pos, CHAR_INFO symbol);
-extern "C" void Draw_Line_Vertical(CHAR_INFO * screen_buffer, SPos pos, CHAR_INFO symbol);
+extern "C" void Draw_Line_Horizontal(CHAR_INFO * screen_buffer, SPos pos, ASymbol symbol);
+extern "C" void Draw_Line_Vertical(CHAR_INFO * screen_buffer, SPos pos, ASymbol symbol);
 extern "C" void Show_Colors(CHAR_INFO * screen_buffer, SPos pos, CHAR_INFO symbol);
 

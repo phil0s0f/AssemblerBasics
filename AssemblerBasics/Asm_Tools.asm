@@ -83,6 +83,55 @@ Draw_Line_Horizontal proc
 
 Draw_Line_Horizontal endp
 ;-----------------------------------------------------------------------------------------------------------------
+Draw_Line_Vertical proc
+;extern "C" void Draw_Line_Vertical(CHAR_INFO * screen_buffer, SPos pos, CHAR_INFO symbol);
+;параметры:
+;RCX - screen_buffer
+;RDX - pos
+;R8 - symbol
+;return нет
+
+	push rax
+	push rcx
+	push rdi
+	push r10
+	push r11
+
+	;1. Вычисляем адрес вывода
+	call Get_Pos_Address ; RDI = позиция символа в буфере screen_buffer в позиции pos
+	
+	mov r10, rdi
+
+	;2. Вычисление коррекции позиции вывода
+	mov r11, rdx
+	shr r11, 32 ; R11 = pos
+	movzx r11, r11w ; R11 = R11W = pos.Screen_width
+	dec r11
+	shl r11, 2 ; R11 = pos.Screen_width * 4 = Ширина экрана в байтах
+
+
+	;3. Готовим счётчик цикла
+	mov rcx, rdx ;Помещаем RDX в RCX для использования цикла LOOP
+	shr rcx, 48 ; RCX = CX = pos.Len
+
+	mov eax, r8d ; eax = symbol
+
+_1:
+	stosd ; выводим символ
+	add rdi, r11 ; переходим на следующую строку
+
+	loop _1 ; цикл выполняется столько раз сколько указано в RCX 
+
+	pop r11
+	pop r10
+	pop rdi
+	pop rcx
+	pop rax
+
+	ret
+
+Draw_Line_Vertical endp
+;-----------------------------------------------------------------------------------------------------------------
 Show_Colors proc
 ;extern "C" void Show_Colors(CHAR_INFO * screen_buffer, SPos pos, CHAR_INFO symbol)
 ;параметры:

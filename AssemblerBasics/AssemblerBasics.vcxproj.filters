@@ -13,15 +13,32 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="AssemblerBasics.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
+    <Filter Include="Main">
+      <UniqueIdentifier>{2cea229b-7437-4db8-8fcb-6dc914dd0cb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Panel">
+      <UniqueIdentifier>{072c9154-eea8-49b0-bffd-ffb2a185ce90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Asm_Tools.asm">
       <Filter>Исходные файлы</Filter>
     </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Panel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Main.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Panel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

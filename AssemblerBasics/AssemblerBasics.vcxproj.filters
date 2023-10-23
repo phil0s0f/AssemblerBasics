@@ -13,17 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Main">
-      <UniqueIdentifier>{2cea229b-7437-4db8-8fcb-6dc914dd0cb6}</UniqueIdentifier>
+    <Filter Include="Asm_Tools">
+      <UniqueIdentifier>{a0300f3f-57bb-4e05-a5e7-8eb0f4fb0eff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commander">
+      <UniqueIdentifier>{bd4723fa-27d8-4656-b9eb-df6a8ec6a6b6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Panel">
       <UniqueIdentifier>{072c9154-eea8-49b0-bffd-ffb2a185ce90}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <MASM Include="Asm_Tools.asm">
-      <Filter>Исходные файлы</Filter>
-    </MASM>
+    <Filter Include="Main">
+      <UniqueIdentifier>{2cea229b-7437-4db8-8fcb-6dc914dd0cb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asm_Tools\Common">
+      <UniqueIdentifier>{23e67a2c-8770-4903-8e87-52c6b5d5b81d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -31,6 +35,12 @@
     </ClCompile>
     <ClCompile Include="Panel.cpp">
       <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Commander.cpp">
+      <Filter>Commander</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Asm_Tools\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -40,5 +50,19 @@
     <ClInclude Include="Panel.h">
       <Filter>Panel</Filter>
     </ClInclude>
+    <ClInclude Include="Commander.h">
+      <Filter>Commander</Filter>
+    </ClInclude>
+    <ClInclude Include="Asm_Tools_Interface.h">
+      <Filter>Asm_Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Asm_Tools\Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="Asm_Tools.asm">
+      <Filter>Asm_Tools</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

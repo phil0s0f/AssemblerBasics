@@ -1,6 +1,3 @@
 #pragma once
-#include <stdio.h>
-#include "Panel.h"
-
-
+#include "Commander.h"
 

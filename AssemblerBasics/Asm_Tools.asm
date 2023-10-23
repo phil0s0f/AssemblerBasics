@@ -149,11 +149,8 @@ Draw_Line_Vertical proc
 	call Get_Pos_Address ; RDI = позиция символа в буфере screen_buffer в позиции pos
 	
 	;2. Вычисление коррекции позиции вывода
-	mov r11, rdx
-	shr r11, 32 ; R11 = pos
-	movzx r11, r11w ; R11 = R11W = pos.Screen_width
-	dec r11
-	shl r11, 2 ; R11 = pos.Screen_width * 4 = Ширина экрана в байтах
+	call Get_Screen_Width_Size ; R11 = pos.Screen_width * 4 = Ширина экрана в байтах
+	sub r11, 4
 
 	;3. Выводим стартовый символ
 	call Draw_Start_Symbol
@@ -206,10 +203,8 @@ Show_Colors proc
 	mov r10, rdi
 
 	;2. Вычисление коррекции позиции вывода
-	mov r11, rdx
-	shr r11, 32 ; R11 = pos
-	movzx r11, r11w ; R11 = R11W = pos.Screen_width
-	shl r11, 2 ; R11 = pos.Screen_width * 4 = Ширина экрана в байтах
+	call Get_Screen_Width_Size ; R11 = pos.Screen_width * 4 = Ширина экрана в байтах
+
 
 	;3. Готовим цикл
 	mov rax, r8 ; RAX = EAX = symbol
@@ -243,6 +238,74 @@ Show_Colors proc
 	ret
 
 Show_Colors endp
+;-----------------------------------------------------------------------------------------------------------------
+Get_Screen_Width_Size proc
+; Вычисляет ширину экрана в байтах
+;RDX - SPos pos ИЛИ SArea_pos pos
+;return R11 =  pos.Screen_width * 4
+
+	mov r11, rdx
+	shr r11, 32 ; R11 = pos
+	movzx r11, r11w ; R11 = R11W = pos.Screen_width
+	shl r11, 2 ; R11 = pos.Screen_width * 4 = Ширина экрана в байтах
+	ret
+
+Get_Screen_Width_Size endp
+;-----------------------------------------------------------------------------------------------------------------
+Clear_Area proc
+;extern "C" void Clear_Area(CHAR_INFO * screen_buffer,SArea_Pos area_pos, ASymbol symbol)
+;параметры:
+;RCX - screen_buffer
+;RDX - area_pos
+;R8 - symbol
+;return нет
+
+	push rax
+	push rbx
+	push rcx
+	push rdi
+	push r10
+	push r11
+
+
+;1. Вычисляем адрес вывода
+	call Get_Pos_Address ; RDI = позиция символа в буфере screen_buffer в позиции pos
+
+	mov r10, rdi
+
+;2. Вычисление коррекции позиции вывода
+	call Get_Screen_Width_Size ; R11 = pos.Screen_width * 4 = Ширина экрана в байтах
+
+;3. Готовим цикл
+	mov rax, r8 ; RAX = EAX = symbol
+
+	mov rbx, rdx
+	shr rbx, 48 ; BH = area_pos.Height, BL = area_pos.Width
+
+	xor rcx, rcx ; RCX = 0
+
+	_0:
+		mov cl, bl; CL = BL = area_pos.Width
+
+		rep stosd ; Запись двойного слова в строку
+
+
+		add r10, r11 ; переход
+		mov rdi, r10 ; на новую строку
+
+		dec bh
+	jnz _0
+
+	pop r11
+	pop r10
+	pop rdi
+	pop rcx
+	pop rbx
+	pop rax
+
+	ret
+
+Clear_Area endp
 ;-----------------------------------------------------------------------------------------------------------------
 
 end

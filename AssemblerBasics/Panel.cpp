@@ -58,6 +58,4 @@ void APanel::Draw()
 		SPos pos(X_Pos + Width / 2, Y_Pos, Screen_Width, Height - 4);
 		Draw_Line_Vertical(Screen_Buffer, pos, symbol);
 	}
-	//Draw_Line_Vertical(Screen_Buffer, pos, symbol);
-	//Show_Colors(Screen_Buffer, pos, symbol);
 }

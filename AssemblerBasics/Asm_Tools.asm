@@ -307,5 +307,101 @@ Clear_Area proc
 
 Clear_Area endp
 ;-----------------------------------------------------------------------------------------------------------------
+Draw_Text proc
+;extern "C" int Draw_Text(CHAR_INFO * screen_buffer, SText_Pos pos, const wchar_t str)
+;параметры:
+;RCX - screen_buffer
+;RDX - pos
+;R8 - symbol
+;return RAX - длина строки str
+
+	push rbx
+	push rdi
+	push r8
+
+;1. Вычисляем адрес вывода
+	call Get_Pos_Address ; RDI = позиция символа в буфере screen_buffer в позиции pos
+
+	mov rax, rdx
+	shr rax, 32 ; EAX = pos.Attribute
+
+	xor rbx, rbx ; RBX = 0
+_1:
+	mov ax, [r8] ; AL = очередной символ из строки
+	
+	cmp ax, 0 ;
+	je _exit
+
+	add r8, 2; переводим указатель на следующий символ строки
+
+	stosd
+	inc rbx
+	jmp _1
+
+_exit:
+	mov rax, rbx
+
+	pop r8
+	pop rdi
+	pop rbx
+
+	ret
+
+Draw_Text endp
+;-----------------------------------------------------------------------------------------------------------------
+Draw_Limited_Text proc
+; extern "C" void Draw_Limited_Text(CHAR_INFO * screen_buffer, SText_Pos pos, const wchar_t* str, unsigned short limit);
+;параметры:
+;RCX - screen_buffer
+;RDX - pos
+;R8 - symbol
+;R9 - limit
+;return RAX - длина строки str
+
+	push rax
+	push rcx
+	push rdi
+	push r8
+	push r9
+
+;1. Вычисляем адрес вывода
+	call Get_Pos_Address ; RDI = позиция символа в буфере screen_buffer в позиции pos
+
+	mov rax, rdx
+	shr rax, 32 ; EAX = pos.Attribute
+
+_1:
+	mov ax, [r8] ; AL = очередной символ из строки
+	
+	cmp ax, 0 ;
+	je _fill_spaces
+
+	add r8, 2; переводим указатель на следующий символ строки
+
+	stosd
+
+	dec r9
+	cmp r9, 0
+	je _exit ; Прекращаем вывод, если строка достигла лимита limit
+
+	jmp _1
+
+_fill_spaces:
+	mov ax, 020h ; AX = символ пробела
+	mov rcx, r9 ; количество оставшихся пробелов
+
+	rep stosd
+
+_exit:
+	pop r9
+	pop r8
+	pop rdi
+	pop rcx
+	pop rax
+
+	ret
+
+Draw_Limited_Text endp
+;-----------------------------------------------------------------------------------------------------------------
 
 end

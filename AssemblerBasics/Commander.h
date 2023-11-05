@@ -2,6 +2,8 @@
 #include "Panel.h"
 #include <stdio.h>
 
+
+
 class AMenu_Item
 {
 public:
@@ -12,7 +14,7 @@ public:
 	unsigned short X_Pos;
 	unsigned short Y_Pos;
 	unsigned short Len;
-	const wchar_t* Key,* Name;
+	const wchar_t* Key, * Name;
 
 };
 
@@ -36,6 +38,6 @@ private:
 	APanel* Left_Panel = 0;
 	APanel* Right_Panel = 0;
 
-	AMenu_Item *Menu_Items[10]{};
+	AMenu_Item* Menu_Items[10]{};
 
 };

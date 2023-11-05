@@ -1,5 +1,9 @@
 #include "Commander.h"
 
+
+
+
+
 AMenu_Item::AMenu_Item(unsigned short x_pos, unsigned short y_pos, unsigned short len, const wchar_t* key, const wchar_t* name)
 	: X_Pos(x_pos), Y_Pos(y_pos), Len(len), Key(key), Name(name)
 {
@@ -79,8 +83,10 @@ bool AsCommander::Init()
 	Left_Panel = new APanel(0, 0, half_width, Screen_Buffer_Info.dwSize.Y - 2, Screen_Buffer, Screen_Buffer_Info.dwSize.X);
 	Right_Panel = new APanel(half_width, 0, half_width, Screen_Buffer_Info.dwSize.Y - 2, Screen_Buffer, Screen_Buffer_Info.dwSize.X);
 
-	
+
 	Build_Menu();
+
+	Left_Panel->Get_Directory_Files();
 
 	return true;
 }
@@ -122,7 +128,7 @@ bool AsCommander::Draw()
 	return true;
 }
 
-void AsCommander::Add_Next_Menu_Item(int &index, int &x_pos, int x_step, const wchar_t* key, const wchar_t* name)
+void AsCommander::Add_Next_Menu_Item(int& index, int& x_pos, int x_step, const wchar_t* key, const wchar_t* name)
 {
 	Menu_Items[index++] = new AMenu_Item(x_pos, Screen_Buffer_Info.dwSize.Y - 1, 12, key, name);
 	x_pos += x_step;

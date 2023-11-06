@@ -26,6 +26,12 @@ void AMenu_Item::Draw(CHAR_INFO* screen_buffer, unsigned short screen_width)
 
 AsCommander::~AsCommander()
 {
+	// Restore the original active screen buffer.
+	if (!SetConsoleActiveScreenBuffer(Std_Output_Handle))
+	{
+		printf("SetConsoleActiveScreenBuffer failed - (%d)\n", GetLastError());
+	}
+
 	delete Left_Panel;
 	delete Right_Panel;
 	delete Screen_Buffer;
@@ -36,11 +42,14 @@ bool AsCommander::Init()
 {
 	SMALL_RECT srctWriteRect;
 	int screen_buffer_size;
+	wchar_t curr_dir[MAX_PATH];
 
-	// Get a handle to the STDOUT screen buffer to copy from and
-	// create a new screen buffer to copy to.
 
-	Std_Handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	GetCurrentDirectory(MAX_PATH, curr_dir);
+
+	Std_Input_Handle = GetStdHandle(STD_INPUT_HANDLE);
+
+	Std_Output_Handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	Screen_Buffer_Handle = CreateConsoleScreenBuffer(
 		GENERIC_READ |           // read/write access
 		GENERIC_WRITE,
@@ -49,7 +58,7 @@ bool AsCommander::Init()
 		NULL,                    // default security attributes
 		CONSOLE_TEXTMODE_BUFFER, // must be TEXTMODE
 		NULL);                   // reserved; must be NULL
-	if (Std_Handle == INVALID_HANDLE_VALUE ||
+	if (Std_Input_Handle == INVALID_HANDLE_VALUE || Std_Output_Handle == INVALID_HANDLE_VALUE ||
 		Screen_Buffer_Handle == INVALID_HANDLE_VALUE)
 	{
 		printf("CreateConsoleScreenBuffer failed - (%d)\n", GetLastError());
@@ -85,11 +94,69 @@ bool AsCommander::Init()
 
 
 	Build_Menu();
-
-	Left_Panel->Get_Directory_Files();
+	Left_Panel->Get_Directory_Files(std::wstring(curr_dir));
 
 	return true;
 }
+
+void AsCommander::Run()
+{
+	unsigned long records_count;
+	INPUT_RECORD input_record[128];
+
+	Can_Run = true;
+	Need_Redraw = true;
+
+
+	while (Can_Run)
+	{
+		if (PeekConsoleInput(Std_Input_Handle, input_record, 128, &records_count))
+		{
+			if (ReadConsoleInput(Std_Input_Handle, input_record, 1, &records_count))
+			{
+				if (records_count != 0)
+				{
+					if (input_record[0].EventType == KEY_EVENT && input_record[0].Event.KeyEvent.bKeyDown)
+					{
+						switch (input_record[0].Event.KeyEvent.wVirtualKeyCode)
+						{
+						case VK_F10:
+							Can_Run = false;
+							break;
+
+						case VK_UP:
+							Left_Panel->Move_Highlight(true);
+							Need_Redraw = true;
+							break;
+
+						case VK_DOWN:
+							Left_Panel->Move_Highlight(false);
+							Need_Redraw = true;
+							break;
+
+						case VK_RETURN:
+							Left_Panel->On_Enter();
+							Need_Redraw = true;
+							break;
+
+						}
+					}
+				}
+			}
+		}
+		if (Need_Redraw)
+		{
+			if (!Draw())
+				return;
+
+			Need_Redraw = false;
+		}
+
+		Sleep(10);
+	}
+}
+
+
 
 bool AsCommander::Draw()
 {
@@ -117,16 +184,13 @@ bool AsCommander::Draw()
 		return false;
 	}
 
-	Sleep(150 * 1000); // 150 секунд программа будет "спать"
+	//Sleep(150 * 1000); // 150 секунд программа будет "спать"
 
-	// Restore the original active screen buffer.
-	if (!SetConsoleActiveScreenBuffer(Std_Handle))
-	{
-		printf("SetConsoleActiveScreenBuffer failed - (%d)\n", GetLastError());
-		return false;
-	}
+
 	return true;
 }
+
+
 
 void AsCommander::Add_Next_Menu_Item(int& index, int& x_pos, int x_step, const wchar_t* key, const wchar_t* name)
 {

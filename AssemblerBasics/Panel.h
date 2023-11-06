@@ -20,16 +20,25 @@ public:
 	APanel(unsigned short x_pos, unsigned short y_pos, unsigned short width, unsigned short height, CHAR_INFO* screen_buffer, unsigned short screen_width);
 
 	void Draw();
-	void Get_Directory_Files();
+	void Get_Directory_Files(const std::wstring& curr_dir);
+	void Move_Highlight(bool move_up);
+	void On_Enter();
 
 private:
-	void Draw_Panels();
+	void Draw_Panel();
 	void Draw_Files();
+	void Draw_One_File(AFile_Descriptor* file_descriptor, int x_offset, int y_offset, unsigned short bg_attribute);
+	void Draw_Highlight();
 
 	unsigned short X_Pos, Y_Pos;
 	unsigned short Width, Height;
 	unsigned short Screen_Width;
 	CHAR_INFO* Screen_Buffer;
 	std::vector<AFile_Descriptor*> Files;
+
+	int Curr_File_Index;
+	int Highlight_X_Offset;
+	int Highlight_Y_Offset;
+	std::wstring Current_Directory;
 };
 

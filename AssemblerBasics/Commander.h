@@ -24,13 +24,17 @@ public:
 	~AsCommander();
 
 	bool Init();
-	bool Draw();
+	void Run();
 
 private:
+	bool Draw();
 	void Add_Next_Menu_Item(int& index, int& x_pos, int x_step, const wchar_t* key, const wchar_t* name);
 	void Build_Menu();
 
-	HANDLE Std_Handle = 0;
+	bool Can_Run;
+	bool Need_Redraw;
+	HANDLE Std_Input_Handle = 0;
+	HANDLE Std_Output_Handle = 0;
 	HANDLE Screen_Buffer_Handle = 0;
 	CHAR_INFO* Screen_Buffer = 0;
 	CONSOLE_SCREEN_BUFFER_INFO Screen_Buffer_Info{};

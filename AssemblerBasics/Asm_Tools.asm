@@ -403,5 +403,83 @@ _exit:
 
 Draw_Limited_Text endp
 ;-----------------------------------------------------------------------------------------------------------------
+Try_Lock proc
+; Параметры
+; RCX - int *key
+; Возврат: RAX - 1 / 0 : True / False
+
+	mov ebx, 0
+	mov edx, 1
+
+
+	mov eax, 1
+	xchg eax, [ rcx ] ; Также блокирует выполнение других потоков и программ, которые обращаются к этой переменной
+
+	; Если EAX = 0, то вернем 1, иначе 0
+	cmp eax, 0
+	cmove eax, edx
+	cmovne eax, ebx
+
+	ret
+
+Try_Lock endp
+;-----------------------------------------------------------------------------------------------------------------
+Test_Command proc
+
+	mov bx, 5
+	mov cx, 7
+	mov al, 1
+	cmp al, 1
+
+	; CMOVcc - команды условного перемещения
+	cmove dx, bx ; move if equal
+	cmovne dx, cx ; move if not equal
+	
+	xor eax, eax
+	xor ecx, ecx
+
+	; EXCHANGE
+	mov eax, 1
+	mov ecx, 2
+	xchg eax, ecx ;exchange - меняет местами 2 значения
+
+	; BYTE SWAP
+	mov eax, 012345678h
+	bswap eax ; перемешивает (инвертирует) местами байты регистра
+
+	xor eax, eax
+	xor ecx, ecx
+	xor edx, edx
+
+	; EXCHANGE ADD
+	; XADD
+	mov eax, 3
+	mov ecx, 1
+	xadd eax, edx
+
+	xor eax, eax
+	xor ecx, ecx
+	xor edx, edx
+
+	; COMPARE AND EXCHANGE
+	; CMPXCHG
+	mov eax, 3
+	mov ecx, 4
+	mov edx, 5
+	cmpxchg ecx, edx
+
+	; MOVE with Sign-Extension
+	; MOVSX
+	xor eax, eax
+	xor ecx, ecx
+	xor ebx, ebx
+	mov ax, -1
+	movzx ebx, ax ; расширяет без знака (заполняет нулями)
+	movsx ecx, ax ; расширяет с знаком (заполняет F)
+	ret
+
+Test_Command endp
+
+;-----------------------------------------------------------------------------------------------------------------
 
 end

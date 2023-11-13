@@ -152,7 +152,7 @@ void APanel::Draw_Files()
 		Draw_One_File(file, x_offset, y_offset, 0x10);
 
 		++y_offset;
-		if (y_offset >= Height - 15)// -5 строк
+		if (y_offset >= Height - 5)// -5 строк
 		{//дошли до конца колонки
 			if (x_offset == 0)
 			{

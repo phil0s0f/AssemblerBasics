@@ -475,7 +475,43 @@ Test_Command proc
 	xor ebx, ebx
 	mov ax, -1
 	movzx ebx, ax ; расширяет без знака (заполняет нулями)
-	movsx ecx, ax ; расширяет с знаком (заполняет F)
+	movsx ecx, ax ; расширяет со знаком (заполняет F)
+
+	; ADC
+	; Добавление с переносом (складывает два операнда и флаг CF(CY в Visual Studio))
+	xor eax, eax
+	xor ebx, ebx
+
+	mov al, 0ffh
+	mov bl, 1
+
+	add al, 10
+	adc bl, 0
+
+	; DIV - деление без знака
+	xor eax, eax
+	xor ebx, ebx
+
+	mov ax, 25 ; AH:AL = 25
+	mov bl, 6
+	div bl
+
+	;IDIV
+	xor eax, eax
+	xor ebx, ebx
+	xor edx, edx
+	
+	mov eax, 0d4a51000h
+	mov edx, 0e8h
+	mov ebx, 555
+	idiv ebx
+
+	; NEG - инвертирует целое значение
+
+	mov rax, 5
+
+	neg rax
+
 	ret
 
 Test_Command endp

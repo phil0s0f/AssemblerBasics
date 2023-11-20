@@ -577,6 +577,43 @@ _1:
 	rol al, 3
 	mov al, 11110000b; сначала заходит во флаг переноса
 	rcl al, 1
+
+	; BT
+	xor rax, rax
+	mov ax, 10b
+
+	bt ax, 0 ; проверяет 0-й бит
+	bt ax, 1 ; проверяет 1-й бит
+	bt ax, 2 ; проверяет 2-й бит
+
+	; BTS - сохраняет бит во флаг переноса и записывает новое значение на месте этолго бита
+	bts ax, 2
+	; BSF - bit scan forward - ищет самый младший бит
+	mov ax, 1000b
+	xor bx, bx
+	bsf bx, ax ; в bx записывается индекс единичного бита
+
+	; BSR - bit scan reverse - щет самый старший бит
+	mov ax, 10000001b
+	xor bx, bx
+	bsr bx, ax
+
+	; SETcc - Set Byte on Condition
+	; TEST - тестирует первый операнд со вторым (выполняет логическое И)
+	mov al, 1000b
+	test al, 10b
+	cmove dx, ax
+
+	mov al, 1000b
+	test al, 1000b
+	cmove cx, ax
+
+	; CRC32 - контрольная сумма
+	; POPCNT - считает количество единиц в операнде
+	mov ax, 10101000b
+	popcnt dx, ax
+
+
 	ret
 
 Test_Command endp

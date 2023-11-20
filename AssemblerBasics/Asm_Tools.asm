@@ -545,6 +545,38 @@ Test_Command proc
 	inc bl
 
 
+	; SHR
+	mov al, 10101011b
+	mov bl, 0
+	mov rcx, 8
+
+_1:
+	shr al, 1
+	adc bl, 0
+	loop _1
+
+	mov al, 100b
+	shr al,2
+	;SHR - можно использовать как деление
+	;SHL - можно использовать как умножение
+
+	;SAR - Shift Arifmetical Right - используется для сдвига знаковых значений
+	mov al, -4
+	sar al, 1
+
+	;SHRD - SHift Right Double
+
+	mov ax, 0000111100001111b
+	mov bx, 0000000000000101b
+	shrd ax, bx, 4 ;сдвигает на 4 бита вправо и заполняет освободившиеся биты значением из регистра BX
+
+	; ROR - ROtate Right
+	; ROL - ROtate Left
+	; RCL - Rotate Cary Left
+	mov al, 11110000b
+	rol al, 3
+	mov al, 11110000b; сначала заходит во флаг переноса
+	rcl al, 1
 	ret
 
 Test_Command endp

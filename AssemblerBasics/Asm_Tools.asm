@@ -512,6 +512,39 @@ Test_Command proc
 
 	neg rax
 
+	; AND - вырезание по маске
+	mov al, 11111010b
+	mov bl, 00001111b
+
+	and al, bl
+
+	; OR - комбинирование нескольких переменных
+	mov al, 11000000b
+	mov bl, 00001100b
+
+	or al, bl
+
+	; XOR - вырезание битов по ключу (применяется в шифрование), обнуление значений
+	mov al, 00000011b
+	mov bl, 00000110b
+
+	xor al, bl
+	xor al, bl
+	
+	xor rax, rax
+
+	; NOT - инвертирует биты
+	mov al, 00000011b
+
+	not al
+
+	mov bl, -3
+	neg bl
+	mov bl, -3
+	not bl
+	inc bl
+
+
 	ret
 
 Test_Command endp

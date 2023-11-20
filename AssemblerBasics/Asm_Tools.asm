@@ -614,6 +614,26 @@ _1:
 	popcnt dx, ax
 
 
+	; JMP - безусловный переход (Near jump, short jump (выбирается автоматически из этих двух)
+	; far jump (выполняет c++), task switch(разрешено только ОС))
+	; Jcc - jump if condition is met
+	; JA (above), JB (below) - для беззнаковых переменных
+	; JG (greater), JL (less) - для знаковых переменных
+	; LOOP - цикл который использует как счетчик регистр RCX, ECX, CX
+	; LOOPcc - NE - equel = 1 и NZ - флаг zero = 1
+	; CALL - вызов функций
+	; RET - возвращение управления из вызваной функции
+	; INT - call to interrupt procedure (int 21h)
+	; вызывает прерывание или исключений
+
+	; BOUND - Check array index against bounds
+	; проверяет лежит ли индекс в пределах массива
+	; генерирует исключения и не работает в 64х режиме
+	; ENTER - Make stack frame for procedure parameters
+	; создает фрейм стека для процедуры
+	; LEAVE
+	; убирает зарезервиваные адреса командой ENTER
+	; команды устарели
 	ret
 
 Test_Command endp

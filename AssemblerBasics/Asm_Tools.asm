@@ -573,6 +573,7 @@ _1:
 	; ROR - ROtate Right
 	; ROL - ROtate Left
 	; RCL - Rotate Cary Left
+	xor eax, eax
 	mov al, 11110000b
 	rol al, 3
 	mov al, 11110000b; сначала заходит во флаг переноса
@@ -634,6 +635,7 @@ _1:
 	; LEAVE
 	; убирает зарезервиваные адреса командой ENTER
 	; команды устарели
+
 	ret
 
 Test_Command endp
